@@ -52,7 +52,7 @@ myFocusedBorderColor = "#aa0000"
 myModMask = mod4Mask
 myNumLockMask = mod2Mask
 
-myWorkspaces = ["1:web", "2:im", "3:code", "4:terminals"] ++ map show [5..7] ++ ["wifi", "music"]
+myWorkspaces = ["1:main", "2:web", "3:im", "4:dev", "5:terminals"] ++ map show [6..8] ++ ["9:music"]
 
 myLayout = avoidStruts $
            tiled
@@ -72,16 +72,30 @@ myLayout = avoidStruts $
 
     delta = 2/100
 
-myManageHook = composeAll
-    [  isFullscreen             --> doFullFloat
-     , className =? "Vncviewer" --> doFloat
-     , className =? "Gimp"      --> doFloat
-     , className =? "MPlayer"   --> doFloat
-     , resource  =? "desktop_window" --> doFloat
-     , title     =? "zsh-onetime" --> doFloat
-     , manageDocks
-     , scratchpadManageHook (W.RationalRect 0.125 0.25 0.75 0.5)
-    ]
+myManageHook = (composeAll . concat $
+    [
+        [className =? c --> doIgnore | c <- ignore]
+       ,[className =? c --> doFullFloat | c <- fullFloat]
+       ,[className =? c --> doFloat | c <- float]
+       ,[className =? c --> doShift "2:web" | c <- web]
+       ,[className =? c --> doShift "3:im" | c <- im]
+       ,[className =? c --> doShift "4:dev" | c <- dev]
+       ,[className =? c --> doShift "5:terminals" | c <- terminals]
+       ,[className =? c --> doShift "9:music" | c <- music]
+       ,[isDialog --> doFloat]
+       ,[isFullscreen --> doFullFloat]
+    ])
+    <+> manageDocks
+    <+> scratchpadManageHook (W.RationalRect 0.125 0.25 0.75 0.5)
+    where
+      ignore = []
+      fullFloat = []
+      float = ["Vncviewer", "Gimp", "MPlayer", "desktop_window", "zsh-onetime"]
+      web = ["Firefox"]
+      im = ["Pidgin"]
+      dev = ["jetbrains-idea", "jetbrains-pycharm", "spyder", "jetbrains-clion"]
+      terminals = ["st", "Xfce4-terminal", "xterm"]
+      music = ["Clementine", "gpmdp", "vlc", "spotify"]
 
 myStartupHook = do
   setWMName "LG3D"
