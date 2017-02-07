@@ -92,9 +92,9 @@ myManageHook = (composeAll . concat $
       fullFloat = []
       float = ["Vncviewer", "Gimp", "MPlayer", "desktop_window", "zsh-onetime"]
       web = ["Firefox"]
-      im = ["Pidgin"]
+      im = ["Pidgin", "Smuxi-frontend-gnome"]
       dev = ["jetbrains-idea", "jetbrains-pycharm", "spyder", "jetbrains-clion"]
-      terminals = ["st", "Xfce4-terminal", "xterm"]
+      terminals = ["st", "Xfce4-terminal", "xterm", "XTerm"]
       music = ["Clementine", "gpmdp", "vlc", "spotify"]
 
 myStartupHook = do
