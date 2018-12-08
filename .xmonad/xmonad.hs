@@ -77,13 +77,14 @@ myManageHook = (composeAll . concat $
         [className =? c --> doIgnore | c <- ignore]
        ,[className =? c --> doFullFloat | c <- fullFloat]
        ,[className =? c --> doFloat | c <- float]
+       ,[className =? c --> doShift "1:org" | c <- org]
        ,[className =? c --> doShift "2:web" | c <- web]
        ,[className =? c --> doShift "3:im" | c <- im]
        ,[className =? c --> doShift "4:dev" | c <- dev]
        ,[className =? c --> doShift "5:terminals" | c <- terminals]
        ,[className =? c --> doShift "9:music" | c <- music]
        ,[isDialog --> doFloat]
-       ,[isFullscreen --> doFullFloat]
+--       ,[isFullscreen --> doFullFloat]
     ])
     <+> manageDocks
     <+> scratchpadManageHook (W.RationalRect 0.125 0.25 0.75 0.5)
@@ -91,9 +92,10 @@ myManageHook = (composeAll . concat $
       ignore = []
       fullFloat = []
       float = ["Vncviewer", "Gimp", "MPlayer", "desktop_window", "zsh-onetime"]
-      web = ["Firefox"]
-      im = ["Pidgin", "Smuxi-frontend-gnome"]
-      dev = ["jetbrains-idea", "jetbrains-pycharm", "spyder", "jetbrains-clion"]
+      org = ["treesheets"]
+      web = ["Firefox", "Google-chrome"]
+      im = ["Pidgin", "Smuxi-frontend-gnome", "thunderbird"]
+      dev = ["jetbrains-idea", "jetbrains-pycharm", "Spyder", "jetbrains-clion", "emacs"]
       terminals = ["st", "Xfce4-terminal", "xterm", "XTerm"]
       music = ["Clementine", "gpmdp", "vlc", "spotify"]
 
@@ -119,10 +121,11 @@ myKeys conf@XConfig {XMonad.modMask = mod} = M.fromList $
     --, ((0, xK_F12), namedScratchpadAction scratchpads "terminal")
       ((mod .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
       --exit
-    , ((mod .|. shiftMask, xK_q), io exitSuccess)
+    , ((mod .|. shiftMask, xK_q), io (exitWith ExitSuccess))
     , ((mod, xK_a), sendMessage ToggleStruts)
     -- launch file manager
     , ((mod, xK_f), spawn "thunar")
+    , ((mod .|. shiftMask, xK_u), spawn "nmcli_dmenu")
     -- go to coresponding workspace
     , ((mod .|. shiftMask, xK_f), windows $ W.greedyView "5:fm")
     , ((mod .|. shiftMask, xK_s), windows $ W.greedyView "6:work")
@@ -134,7 +137,7 @@ myKeys conf@XConfig {XMonad.modMask = mod} = M.fromList $
     -- launch screensaver
     , ((controlMask .|. shiftMask , xK_l), spawn "slock")
     --close current window
-    , ((mod .|. shiftMask, xK_c     ), kill1)
+    , ((mod .|. shiftMask, xK_c     ), kill)
     , ((mod,               xK_space ), sendMessage NextLayout)
     --  Reset the layouts on the current workspace to default
     , ((mod .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf)
@@ -178,8 +181,8 @@ myKeys conf@XConfig {XMonad.modMask = mod} = M.fromList $
   ,((controlMask, xK_Print), spawn "sleep 0.2; scrot -s")
 	,((0, xF86XK_MonBrightnessUp), spawn "xbacklight +17")
 	,((0, xF86XK_MonBrightnessDown), spawn "xbacklight -17")
-	,((0, xF86XK_AudioLowerVolume), spawn "amixer set Master 2-")
-	,((0, xF86XK_AudioRaiseVolume), spawn "amixer set Master 2+")
+	,((0, xF86XK_AudioLowerVolume), spawn "amixer set Master 5%-")
+	,((0, xF86XK_AudioRaiseVolume), spawn "amixer set Master 5%+")
 	,((0, xF86XK_AudioMute), spawn "amixer set Master toggle")
 	,((0, xF86XK_AudioPlay), spawn "clementine --play-pause")
 	,((0, xF86XK_AudioPrev), spawn "clementine --previous")
@@ -200,14 +203,13 @@ myKeys conf@XConfig {XMonad.modMask = mod} = M.fromList $
     -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
     -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
     --
-    [((mod .|. mask, key), f sc)
-        | (key, sc) <- zip [xK_q, xK_w, xK_e] [0..]
-        , (f, mask) <- [(viewScreen, 0), (sendToScreen, shiftMask)]]
-
+    [((m .|. mod, key), screenWorkspace sc >>= flip whenJust (windows . f))
+    | (key, sc) <- zip [xK_q, xK_w, xK_e] [0..]
+    , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
  
 main = do 
-  xmproc <- spawnPipe "xmobar /home/grapefroot/.xmobarrc"
-  xmonad $ defaults xmproc
+  xmproc <- spawnPipe "/home/grapefroot/.local/bin/xmobar"
+  xmonad $ docks $ defaults xmproc
 
 defaults xmproc = defaultConfig {
   terminal = myTerminal,
