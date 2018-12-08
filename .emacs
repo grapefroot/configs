@@ -15,7 +15,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (org-gcal ein ## auctex elpy jedi magit dracula-theme evil-mode markdown-mode use-package helm evil-visual-mark-mode))))
+    (json-mode org-gcal ein ## auctex elpy jedi magit dracula-theme evil-mode markdown-mode use-package helm evil-visual-mark-mode))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
