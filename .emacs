@@ -7,6 +7,7 @@
 
 (setq package-enable-at-startup nil)
 (package-initialize)
+(setq-default TeX-master "master.tex") ;; master file for auctex
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -82,7 +83,11 @@
 (use-package elpy
   :ensure t)
 (elpy-enable)
-(elpy-use-ipython)
+(setq python-shell-interpreter "jupyter"
+      python-shell-interpreter-args "console --simple-prompt"
+      python-shell-prompt-detect-failure-warning nil)
+(add-to-list 'python-shell-completion-native-disabled-interpreters
+             "jupyter")
 
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
