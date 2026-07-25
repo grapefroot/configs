@@ -1,0 +1,37 @@
+# tmuxinator project: work
+# Start with:  tmuxinator start work
+# conda env `glam` is activated in every pane via pre_window.
+
+name: work
+root: ~/
+
+attach: true
+
+# Runs in EVERY pane before its command, so glam's scripts are on PATH
+# in every window/pane of this session.
+pre_window:
+  - 'eval "$(/Users/grapefroot/miniforge3/bin/conda shell.zsh hook)"'
+  - conda activate glam
+
+windows:
+  # Window 1: 2 panes side-by-side left/right, equal width, full height.
+  - main:
+      layout: even-horizontal
+      panes:
+        - top:
+        - bottom:
+
+  # Window 2: left half is one pane; right half split into two (top/bottom).
+  #   +----------+----------+
+  #   |          |   tr     |
+  #   |   left   +----------+
+  #   |          |   br     |
+  #   +----------+----------+
+  - split:
+      # Custom layout: left pane = 50%, right half split into two (25% each).
+      # Captured layout string preserves the 50/25/25 ratio at any window size.
+      layout: '5dfa,360x90,0,0{180x90,0,0,12,179x90,181,0[179x45,181,0,13,179x44,181,46,14]}'
+      panes:
+        - left:
+        - tr:
+        - br:

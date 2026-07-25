@@ -1,0 +1,34 @@
+# tmuxinator project: ide
+# Start with:   tmuxinator start ide [project-root]
+# This session starts DETACHED so an IDE can attach to it on its own terms.
+
+name: ide
+# Root dir: pass a path as the first arg, e.g. `tmuxinator start ide ~/projects/foo`.
+# Falls back to $HOME when no arg is given.
+root: <%= @args[0] || ENV["HOME"] %>
+
+# Do not auto-attach in the terminal — the IDE attaches itself.
+attach: true
+
+# Which window is active when an IDE attaches.
+startup_window: shell
+
+# --- Hooks (uncomment to use) ---
+# on_project_start: git pull --rebase
+# on_project_stop:  docker compose down
+
+# Run in every pane before its command. Useful for venv/nvm/direnv:
+# pre_window: source .venv/bin/activate
+
+windows:
+  - shell:             # spare terminal window
+      panes:
+        - shell:
+  - split:
+      # Custom layout: left pane = 50%, right half split into two (25% each).
+      # Captured layout string preserves the 50/25/25 ratio at any window size.
+      layout: '5dfa,360x90,0,0{180x90,0,0,12,179x90,181,0[179x45,181,0,13,179x44,181,46,14]}'
+      panes:
+        - main:        # primary shell — drive from the IDE
+        - build:       # build / test watcher (add a command below to auto-run)
+        - logs:        # tail logs (add a command below to auto-run)
