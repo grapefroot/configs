@@ -18,7 +18,7 @@
       syntaxHighlighting.enable = true;    # verified: modules/programs/zsh/default.nix:40
       oh-my-zsh = {
         enable = true;
-        theme = "robbyrussell";
+        theme = "lambda";
         plugins = [ "git" "sudo" ];        # omz builtin plugin names
       };
       history = {
