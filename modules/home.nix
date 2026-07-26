@@ -1,4 +1,4 @@
-{...}:
+{pkgs, ...}:
 {
 
   programs.zsh.enable = true;  # NixOS-level: generate /etc/zsh* so login works
@@ -10,6 +10,13 @@
 
     imports = [
       ./programs/zsh.nix
+    ];
+
+    home.packages = with pkgs; [
+      git
+      tmux
+      foot
+      zed-editor
     ];
 
     home.username = "focus";

@@ -50,6 +50,7 @@
   # Enable the XFCE Desktop Environment.
   services.xserver.displayManager.lightdm.enable = true;
   services.xserver.desktopManager.xfce.enable = true;
+  services.xserver.displayManager.defaultSession = "hyprland";
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -105,7 +106,7 @@
   programs.hyprland = {
     enable = true;
     # Optional: enables XWayland for compatibility with older X11 apps
-    xwayland.enable = true; 
+    xwayland.enable = true;
   };
 
   # Allow unfree packages
