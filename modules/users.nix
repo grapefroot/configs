@@ -1,4 +1,4 @@
-{...}:
+{ pkgs, ... }:
 {
   users.users."grapefroot" = {
     isNormalUser = true;
@@ -14,5 +14,6 @@
   users.users.focus = {
     isNormalUser = true;
     extraGroups = [];
+    shell = pkgs.zsh;
   };
-} 
+}
