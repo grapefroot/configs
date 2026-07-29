@@ -24,5 +24,6 @@
     home.stateVersion = "26.05";
     home.file.".tmux.conf".source = ../home/.tmux.conf;
     home.file.".config/tmuxinator".source = ../home/tmuxinator;
+    home.file.".config/hypr/hyprland.lua".source = ../home/hypr/focus.lua;
   };
 }

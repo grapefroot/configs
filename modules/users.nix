@@ -16,9 +16,4 @@
     extraGroups = [];
     shell = pkgs.zsh;
   };
-
-  services.displayManager.autoLogin = {
-    enable = true;
-    user = "focus";
-  };
 }

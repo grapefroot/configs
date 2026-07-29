@@ -50,7 +50,17 @@
   # Enable the XFCE Desktop Environment.
   services.xserver.displayManager.lightdm.enable = true;
   services.xserver.desktopManager.xfce.enable = true;
-  services.xserver.displayManager.defaultSession = "hyprland";
+  services.displayManager.defaultSession = "hyprland";
+
+  # lightdm-gtk-greeter preselects the first session in sessions-directory
+  # (xsessions -> xfce) for any user with no session recorded in
+  # AccountsService. `defaultSession` above is meant to set that, but the
+  # module does it via a `set-session` pre-start script that races
+  # accounts-daemon at boot and can fail to populate the user's session.
+  # Pin the greeter default explicitly so focus lands on Hyprland regardless.
+  services.xserver.displayManager.lightdm.extraSeatDefaults = ''
+    user-session = hyprland
+  '';
 
   # Configure keymap in X11
   services.xserver.xkb = {
