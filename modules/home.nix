@@ -25,5 +25,12 @@
     home.file.".tmux.conf".source = ../home/.tmux.conf;
     home.file.".config/tmuxinator".source = ../home/tmuxinator;
     home.file.".config/hypr/hyprland.lua".source = ../home/hypr/focus.lua;
+
+    home.pointerCursor = {
+      package = pkgs.adwaita-icon-theme;
+      name = "Adwaita";
+      size = 24;
+      hyprcursor.enable = true;
+    };
   };
 }
