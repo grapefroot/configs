@@ -33,4 +33,61 @@
       hyprcursor.enable = true;
     };
   };
+
+  home-manager.users.grapefroot = {
+    imports = [
+      ./programs/zsh.nix
+    ];
+
+    home.packages = with pkgs; [
+      git
+      tmux
+      foot
+      firefox
+      zed-editor
+      vim
+      git
+    ];
+
+    home.username = "grapefroot";
+    home.homeDirectory = "/home/grapefroot";
+    home.stateVersion = "26.05";
+    home.file.".tmux.conf".source = ../home/.tmux.conf;
+
+    home.pointerCursor = {
+      package = pkgs.adwaita-icon-theme;
+      name = "Adwaita";
+      size = 24;
+      hyprcursor.enable = true;
+    };
+  };
+
+  home-manager.users.admin = {
+    imports = [
+      ./programs/zsh.nix
+    ];
+
+    home.packages = with pkgs; [
+      git
+      tmux
+      foot
+      firefox
+      zed-editor
+      vim
+      git
+    ];
+
+    home.username = "admin";
+    home.homeDirectory = "/home/admin";
+    home.stateVersion = "26.05";
+    home.file.".tmux.conf".source = ../home/.tmux.conf;
+
+    home.pointerCursor = {
+      package = pkgs.adwaita-icon-theme;
+      name = "Adwaita";
+      size = 24;
+      hyprcursor.enable = true;
+    };
+
+  };
 }
