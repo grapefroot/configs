@@ -50,6 +50,7 @@
       git
       pi-coding-agent
       bemenu
+      playerctl
     ];
 
     home.username = "grapefroot";
@@ -80,6 +81,7 @@
       git
       pi-coding-agent
       bemenu
+      playerctl
     ];
 
     home.username = "admin";
@@ -93,6 +95,5 @@
       size = 24;
       hyprcursor.enable = true;
     };
-
   };
 }
