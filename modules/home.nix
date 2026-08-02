@@ -96,4 +96,34 @@
       hyprcursor.enable = true;
     };
   };
+
+
+  home-manager.users.papers = {
+
+    imports = [
+      ./programs/zsh.nix
+    ];
+
+    home.packages = with pkgs; [
+      tmux
+      foot
+      zed-editor
+      pi-coding-agent
+      sioyek
+    ];
+
+    home.username = "papers";
+    home.homeDirectory = "/home/papers";
+    home.stateVersion = "26.05";
+    home.file.".tmux.conf".source = ../home/.tmux.conf;
+    home.file.".config/hypr/hyprland.lua".source = ../home/hypr/papers.lua;
+
+    home.pointerCursor = {
+      package = pkgs.adwaita-icon-theme;
+      name = "Adwaita";
+      size = 24;
+      hyprcursor.enable = true;
+    };
+  };
+
 }

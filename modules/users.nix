@@ -3,7 +3,7 @@
   users.users."grapefroot" = {
     isNormalUser = true;
     description = "grapefroot";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "papers" ];  # write access to /home/papers/papers
     shell = pkgs.zsh;
   };
 
@@ -18,4 +18,13 @@
     extraGroups = [];
     shell = pkgs.zsh;
   };
+
+  users.users.papers = {
+    isNormalUser = true;
+    extraGroups = [ "papers" ];  # read access to /home/papers/papers
+    shell = pkgs.zsh;
+  };
+
+  # Shared group for the ~/papers directory (admin writes, papers reads)
+  users.groups.papers = {};
 }
