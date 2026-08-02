@@ -17,6 +17,7 @@
       tmux
       foot
       zed-editor
+      pi-coding-agent
     ];
 
     home.username = "focus";
@@ -47,6 +48,8 @@
       zed-editor
       vim
       git
+      pi-coding-agent
+      bemenu
     ];
 
     home.username = "grapefroot";
@@ -75,6 +78,8 @@
       zed-editor
       vim
       git
+      pi-coding-agent
+      bemenu
     ];
 
     home.username = "admin";
