@@ -100,7 +100,10 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
-  services.logind.settings.Login.HandleLidSwitch = "suspend";
+  services.logind.settings.Login = {
+    HandleLidSwitch       = "suspend";
+    HandleLidSwitchDocked = "ignore";
+  };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
 #  users.users."grapefroot" = {
