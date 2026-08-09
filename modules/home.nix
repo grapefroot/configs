@@ -6,7 +6,7 @@
   home-manager.useUserPackages = true;
   home-manager.backupFileExtension = "hm-backup";
 
-  home-manager.users.focus = {
+  home-manager.users.focus = { pkgs, config, ... }: {
 
     imports = [
       ./programs/zsh.nix
@@ -23,6 +23,7 @@
     home.username = "focus";
     home.homeDirectory = "/home/focus";
     home.stateVersion = "26.05";
+    home.file."code".source = config.lib.file.mkOutOfStoreSymlink "/srv/shared/code";
     home.file.".tmux.conf".source = ../home/.tmux.conf;
     home.file.".config/tmuxinator".source = ../home/tmuxinator;
     home.file.".config/hypr/hyprland.lua".source = ../home/hypr/focus.lua;
@@ -35,7 +36,7 @@
     };
   };
 
-  home-manager.users.grapefroot = {
+  home-manager.users.grapefroot = { pkgs, config, ... }: {
     imports = [
       ./programs/zsh.nix
     ];
@@ -51,11 +52,13 @@
       pi-coding-agent
       bemenu
       playerctl
+      darktable
     ];
 
     home.username = "grapefroot";
     home.homeDirectory = "/home/grapefroot";
     home.stateVersion = "26.05";
+    home.file."code".source = config.lib.file.mkOutOfStoreSymlink "/srv/shared/code";
     home.file.".tmux.conf".source = ../home/.tmux.conf;
 
     home.pointerCursor = {
@@ -66,7 +69,7 @@
     };
   };
 
-  home-manager.users.admin = {
+  home-manager.users.admin = { pkgs, config, ... }: {
     imports = [
       ./programs/zsh.nix
     ];
@@ -87,6 +90,7 @@
     home.username = "admin";
     home.homeDirectory = "/home/admin";
     home.stateVersion = "26.05";
+    home.file."code".source = config.lib.file.mkOutOfStoreSymlink "/srv/shared/code";
     home.file.".tmux.conf".source = ../home/.tmux.conf;
 
     home.pointerCursor = {

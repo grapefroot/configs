@@ -1,0 +1,24 @@
+# secrets & credentials
+.netrc
+.aws/
+.ssh/
+.gnupg/
+*.pem
+*.key
+*.p12
+.env
+.env.*
+
+# token caches / OAuth
+.gcalcli_cache
+.cache/
+
+# editor cruft
+*~
+.*.swp
+*.swo
+.DS_Store
+
+# nix build output symlinks
+result
+result-*

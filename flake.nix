@@ -21,6 +21,7 @@
           ./hosts/workstation/default.nix
           ./hosts/workstation/hardware-configuration.nix
           ./modules/users.nix
+          ./modules/shared-files.nix
           ./modules/nix-restrict.nix
           home-manager.nixosModules.home-manager
           ./modules/home.nix
