@@ -44,6 +44,8 @@
       system = "x86_64-darwin";
       modules = [
         ./hosts/macbook/default.nix
+        home-manager.darwinModules.home-manager
+        ./modules/home-darwin.nix
       ];
     };
   };
