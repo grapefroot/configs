@@ -18,6 +18,8 @@
       foot
       zed-editor
       pi-coding-agent
+      docker
+      docker-compose
     ];
 
     home.username = "focus";
@@ -53,6 +55,8 @@
       bemenu
       playerctl
       darktable
+      docker
+      docker-compose
     ];
 
     home.username = "grapefroot";

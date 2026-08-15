@@ -3,19 +3,19 @@
   users.users."grapefroot" = {
     isNormalUser = true;
     description = "grapefroot";
-    extraGroups = [ "networkmanager" "wheel" "papers" "shared" ];  # write access to /home/papers/papers
+    extraGroups = [ "networkmanager" "wheel" "papers" "shared" "docker"];  # write access to /home/papers/papers
     shell = pkgs.zsh;
   };
 
   users.users.admin = {
     isNormalUser = true;
-    extraGroups = [ "networkmanager" "wheel" "shared" ];
+    extraGroups = [ "networkmanager" "wheel" "shared" "docker"];
     shell = pkgs.zsh;
   };
 
   users.users.focus = {
     isNormalUser = true;
-    extraGroups = [ "shared" ];
+    extraGroups = [ "shared" "docker"];
     shell = pkgs.zsh;
   };
 
