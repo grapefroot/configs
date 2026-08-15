@@ -19,10 +19,18 @@
       url = "github:nix-darwin/nix-darwin/nix-darwin-26.05";
       inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
+
+    # MicroVM.nix: run lightweight NixOS VMs on the workstation host.
+    # `follows = "nixpkgs"` builds it against the same nixpkgs as the host.
+    # Linux only — not referenced by the darwin/macbook configuration.
+    microvm = {
+      url = "github:microvm-nix/microvm.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   
   
-  outputs = { self, nixpkgs, nixpkgs-darwin, home-manager, nix-darwin, ... }@inputs: {
+  outputs = { self, nixpkgs, nixpkgs-darwin, home-manager, nix-darwin, microvm, ... }@inputs: {
 
     nixosConfigurations = {
 
@@ -34,6 +42,8 @@
           ./modules/users.nix
           ./modules/shared-files.nix
           ./modules/nix-restrict.nix
+          microvm.nixosModules.host
+          ./modules/microvm.nix
           home-manager.nixosModules.home-manager
           ./modules/home.nix
         ];
