@@ -133,5 +133,4 @@
       hyprcursor.enable = true;
     };
   };
-
 }

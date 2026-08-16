@@ -153,6 +153,42 @@
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 
+  systemd.services.ssh-tunnel-8003 = let
+    tunnel = pkgs.writeShellScriptBin "ssh-tunnel-8003" ''
+      set -euo pipefail
+      host_file=/home/grapefroot/.config/ssh-tunnel-glm/host
+      if [[ ! -s "$host_file" ]]; then
+        echo "ssh-tunnel-8003: missing or empty host file $host_file" >&2
+        exit 1
+      fi
+      host="$(cat "$host_file")"
+      exec ${pkgs.openssh}/bin/ssh -N \
+        -L 8003:localhost:8003 \
+        -o ExitOnForwardFailure=yes \
+        -o ConnectTimeout=10 \
+        -o ServerAliveInterval=30 \
+        -o ServerAliveCountMax=3 \
+        -o ForwardAgent=no \
+        "ubuntu@$host"
+    '';
+  in {
+    description = "SSH tunnel: local 8003 -> remote vLLM (GLM5.2)";
+    after = [ "network-online.target" ];
+    wants = [ "network-online.target" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "exec";
+      User = "grapefroot";
+      Group = "users";
+      ExecStart = "${tunnel}/bin/ssh-tunnel-8003";
+      Restart = "always";
+      RestartSec = "5s";
+      Environment = [ "HOME=/home/grapefroot" ];
+      NoNewPrivileges = true;
+      PrivateTmp = true;
+    };
+  };
+
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave
