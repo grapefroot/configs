@@ -10,13 +10,13 @@
 
     imports = [
       ./programs/zsh.nix
+      ./programs/zed/zed.nix
     ];
 
     home.packages = with pkgs; [
       git
       tmux
       foot
-      zed-editor
       pi-coding-agent
       docker
       docker-compose
@@ -41,6 +41,7 @@
   home-manager.users.grapefroot = { pkgs, config, ... }: {
     imports = [
       ./programs/zsh.nix
+      ./programs/zed/zed.nix
     ];
 
     home.packages = with pkgs; [
@@ -48,7 +49,6 @@
       tmux
       foot
       firefox
-      zed-editor
       vim
       git
       pi-coding-agent
@@ -76,6 +76,7 @@
   home-manager.users.admin = { pkgs, config, ... }: {
     imports = [
       ./programs/zsh.nix
+      ./programs/zed/zed.nix
     ];
 
     home.packages = with pkgs; [
@@ -83,7 +84,6 @@
       tmux
       foot
       firefox
-      zed-editor
       vim
       git
       pi-coding-agent
@@ -110,12 +110,12 @@
 
     imports = [
       ./programs/zsh.nix
+      ./programs/zed/zed.nix
     ];
 
     home.packages = with pkgs; [
       tmux
       foot
-      zed-editor
       pi-coding-agent
       sioyek
     ];

@@ -15,6 +15,7 @@
   home-manager.users.grapefroot = { pkgs, ... }: {
     imports = [
       ./programs/zsh.nix
+      ./programs/zed/zed.nix
     ];
 
     home.packages = with pkgs; [

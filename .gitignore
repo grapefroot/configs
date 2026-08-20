@@ -19,6 +19,10 @@
 *.swo
 .DS_Store
 
+# Zed settings containing machine-local or sensitive values. Home Manager
+# uses modules/programs/zed/shared-settings.json for version-controlled defaults.
+/modules/programs/zed/settings.json
+
 # nix build output symlinks
 result
 result-*

@@ -1,0 +1,127 @@
+{
+  "cli_default_open_behavior": "new_window",
+  "context_servers": {},
+  "terminal": {
+    "dock": "bottom"
+  },
+  "project_panel": {
+    "dock": "left"
+  },
+  "outline_panel": {
+    "dock": "left"
+  },
+  "collaboration_panel": {
+    "dock": "right"
+  },
+  "diff_view_style": "unified",
+  "git_panel": {
+    "dock": "left",
+    "tree_view": true
+  },
+  "agent_servers": {
+    "claude-acp": {
+      "default_config_options": {
+        "model": "claude-fable-5[1m]"
+      },
+      "type": "registry"
+    },
+    "codex-acp": {
+      "default_config_options": {
+        "reasoning_effort": "medium"
+      },
+      "type": "registry"
+    },
+    "gemini": {
+      "type": "registry"
+    }
+  },
+  "disable_ai": false,
+  "toolbar": {
+    "agent_review": true
+  },
+  "ensure_final_newline_on_save": true,
+  "remove_trailing_whitespace_on_save": true,
+  "format_on_save": "on",
+  "inlay_hints": {
+    "enabled": true
+  },
+  "edit_predictions": {
+    "provider": "zed",
+    "mode": "subtle",
+    "copilot": {
+      "proxy": null,
+      "proxy_no_verify": null
+    },
+    "enabled_in_text_threads": false
+  },
+  "agent": {
+    "sandbox_permissions": {
+      "allow_unsandboxed": true,
+      "allow_all_hosts": true
+    },
+    "tool_permissions": {
+      "tools": {
+        "fetch": {
+          "always_allow": [
+            {
+              "pattern": "^https?://zed\\.dev"
+            }
+          ]
+        }
+      }
+    },
+    "sidebar_side": "right",
+    "dock": "right",
+    "inline_assistant_model": {
+      "provider": "zed.dev",
+      "model": "claude-sonnet-4"
+    },
+    "default_profile": "write",
+    "default_model": {
+      "effort": "xhigh",
+      "enable_thinking": true,
+      "provider": "vllm-glm5.2",
+      "model": "glm5.2"
+    }
+  },
+  "features": {
+    "edit_prediction_provider": "zed"
+  },
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false
+  },
+  "vim_mode": true,
+  "relative_line_numbers": "enabled",
+  "ui_font_size": 16,
+  "buffer_font_size": null,
+  "theme": {
+    "mode": "system",
+    "light": "One Light",
+    "dark": "One Dark"
+  },
+  "language_models": {
+    "openai_compatible": {
+      "vllm-glm5.2": {
+        "api_url": "http://127.0.0.1:8003/v1",
+        "available_models": [
+          {
+            "name": "glm5.2",
+            "max_tokens": 262144,
+            "max_output_tokens": 32768,
+            "reasoning_effort": "high",
+            "capabilities": {
+              "tools": true,
+              "images": false,
+              "parallel_tool_calls": false,
+              "prompt_cache_key": false,
+              "chat_completions": true,
+              "interleaved_reasoning": true,
+              "max_tokens_parameter": true
+            }
+          }
+        ]
+      }
+    }
+  }
+}
