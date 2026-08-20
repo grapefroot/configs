@@ -46,6 +46,8 @@
           ./modules/users.nix
           ./modules/shared-files.nix
           ./modules/nix-restrict.nix
+          ./modules/keyd.nix
+          ./modules/libinput-quirks.nix
           microvm.nixosModules.host
           ./modules/microvm.nix
           home-manager.nixosModules.home-manager

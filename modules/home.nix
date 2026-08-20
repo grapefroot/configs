@@ -20,6 +20,9 @@
       pi-coding-agent
       docker
       docker-compose
+      uv
+      ruff
+      package-version-server
     ];
 
     home.username = "focus";
@@ -57,6 +60,9 @@
       darktable
       docker
       docker-compose
+      uv
+      ruff
+      package-version-server
     ];
 
     home.username = "grapefroot";
@@ -89,6 +95,9 @@
       pi-coding-agent
       bemenu
       playerctl
+      uv
+      ruff
+      package-version-server
     ];
 
     home.username = "admin";
