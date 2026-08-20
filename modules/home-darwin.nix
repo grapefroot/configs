@@ -29,6 +29,7 @@
       gh
       jless
       television
+      pi-coding-agent
 
       # --- Languages / dev tools ---
       go

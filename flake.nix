@@ -10,6 +10,8 @@
     # the Linux nixpkgs; nix-darwin follows this one.
     nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-26.05-darwin";
 
+    pi.url = "github:lukasl-dev/pi.nix";
+
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -30,13 +32,15 @@
   };
   
   
-  outputs = { self, nixpkgs, nixpkgs-darwin, home-manager, nix-darwin, microvm, ... }@inputs: {
+  outputs = { self, nixpkgs, nixpkgs-darwin, home-manager, nix-darwin, microvm, pi, ... }: {
 
     nixosConfigurations = {
 
       workstation = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
+        specialArgs = { inherit pi; };
         modules = [
+          ./modules/pi-coding-agent.nix
           ./hosts/workstation/default.nix
           ./hosts/workstation/hardware-configuration.nix
           ./modules/users.nix
@@ -52,7 +56,9 @@
 
     darwinConfigurations.macbook = nix-darwin.lib.darwinSystem {
       system = "x86_64-darwin";
+      specialArgs = { inherit pi; };
       modules = [
+        ./modules/pi-coding-agent.nix
         ./hosts/macbook/default.nix
         home-manager.darwinModules.home-manager
         ./modules/home-darwin.nix

@@ -4,7 +4,7 @@
 #   https://microvm-nix.github.io/microvm.nix/host.html
 #   https://microvm-nix.github.io/microvm.nix/declarative.html
 
-{ ... }:
+{ pi, ... }:
 
 {
   # The microvm host module runs every `microvm@*.service` as the system
@@ -42,6 +42,7 @@
     autostart = false;          # start manually: sudo systemctl start microvm@pi
     config = { pkgs, ... }: {
       imports = [ ./microvm-qemu.nix ];
+      nixpkgs.overlays = [ pi.overlays.default ];
       microvm = {
         mem = 1024;            # node + agent context; tune down if you want
         vcpu = 2;
