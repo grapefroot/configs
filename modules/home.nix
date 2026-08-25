@@ -1,7 +1,7 @@
 {pkgs, ...}:
 {
 
-  programs.zsh.enable = true;  # NixOS-level: generate /etc/zsh* so login works
+  programs.zsh.enable = true;
 
   home-manager.useUserPackages = true;
   home-manager.backupFileExtension = "hm-backup";
@@ -16,6 +16,7 @@
     home.packages = with pkgs; [
       git
       tmux
+      tmuxinator
       foot
       pi-coding-agent
       docker
@@ -23,6 +24,7 @@
       uv
       ruff
       package-version-server
+      sioyek
     ];
 
     home.username = "focus";
@@ -50,6 +52,7 @@
     home.packages = with pkgs; [
       git
       tmux
+      tmuxinator
       foot
       firefox
       vim
@@ -58,11 +61,13 @@
       bemenu
       playerctl
       darktable
+      treesheets
       docker
       docker-compose
       uv
       ruff
       package-version-server
+      sioyek
     ];
 
     home.username = "grapefroot";
@@ -70,6 +75,8 @@
     home.stateVersion = "26.05";
     home.file."code".source = config.lib.file.mkOutOfStoreSymlink "/srv/shared/code";
     home.file.".tmux.conf".source = ../home/.tmux.conf;
+    home.file.".config/tmuxinator".source = ../home/tmuxinator;
+    home.file.".config/hypr/hyprland.lua".source = ../home/hypr/grapefroot.lua;
 
     home.pointerCursor = {
       package = pkgs.adwaita-icon-theme;
@@ -88,6 +95,7 @@
     home.packages = with pkgs; [
       git
       tmux
+      tmuxinator
       foot
       firefox
       vim
@@ -98,6 +106,7 @@
       uv
       ruff
       package-version-server
+      sioyek
     ];
 
     home.username = "admin";
@@ -123,10 +132,10 @@
     ];
 
     home.packages = with pkgs; [
-      tmux
       foot
       pi-coding-agent
       sioyek
+      treesheets
     ];
 
     home.username = "papers";

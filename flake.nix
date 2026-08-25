@@ -41,11 +41,13 @@
         specialArgs = { inherit pi; };
         modules = [
           ./modules/pi-coding-agent.nix
+          ./modules/treesheets.nix
           ./hosts/workstation/default.nix
           ./hosts/workstation/hardware-configuration.nix
           ./modules/users.nix
           ./modules/shared-files.nix
           ./modules/nix-restrict.nix
+          ./modules/nix-ld.nix
           ./modules/keyd.nix
           ./modules/libinput-quirks.nix
           microvm.nixosModules.host
