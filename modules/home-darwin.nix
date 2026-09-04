@@ -2,7 +2,7 @@
 #
 # Reuses ./programs/zsh.nix so the Mac's shell is identical to the
 # workstation's (oh-my-zsh, lambda theme, syntax highlighting,
-# autosuggestions, 10k history). The packages that used to live in the
+# 10k history). The packages that used to live in the
 # Mac's environment.systemPackages now live in the home-manager user
 # profile instead.
 
