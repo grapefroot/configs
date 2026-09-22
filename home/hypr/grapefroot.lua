@@ -94,6 +94,7 @@ local menu        = "bemenu-run --prompt '' --nb '#001f3f' --nf '#dddddd' --hb '
 --   hl.exec_cmd(terminal)
 --   hl.exec_cmd("nm-applet")
 --   hl.exec_cmd("waybar & hyprpaper & firefox")
+hl.exec_cmd("systemctl --user start waybar.service")
 -- end)
 
 
@@ -318,6 +319,7 @@ hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2
 hl.bind(mainMod .. " + F", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + P", hl.dsp.exec_cmd(menu))
+hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("systemctl --user kill --signal=USR1 waybar.service"))
 hl.bind(mainMod .. " + R", hl.dsp.window.pseudo())
 -- Lock screen via LightDM greeter (session keeps running, no logout)
 hl.bind("CTRL + SHIFT + L", hl.dsp.exec_cmd("dm-tool lock"))

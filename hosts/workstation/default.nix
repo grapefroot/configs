@@ -71,6 +71,8 @@
   # Configure console keymap
   console.keyMap = "us";
 
+  services.gvfs.enable = true;
+
   # Enable CUPS to print documents.
   services.printing.enable = true;
 

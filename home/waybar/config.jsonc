@@ -1,0 +1,17 @@
+{
+  "layer": "top",
+  "position": "top",
+  "height": 20,
+  "modules-left": ["hyprland/workspaces"],
+  "modules-right": ["battery", "clock"],
+  "hyprland/workspaces": { "format": "{name}" },
+  "clock": { "format": "{:%H:%M}" },
+  "battery": {
+    "bat": "BAT0",
+    "interval": 15,
+    "format": "{icon} {capacity}%",
+    "format-charging": "⚡{capacity}%",
+    "format-icons": ["", "", "", "", ""],
+    "states": { "warning": 25, "critical": 10 }
+  }
+}

@@ -61,6 +61,7 @@
       bemenu
       playerctl
       darktable
+      gphoto2
       treesheets
       docker
       docker-compose
@@ -68,6 +69,7 @@
       ruff
       package-version-server
       sioyek
+      waybar
     ];
 
     home.username = "grapefroot";
@@ -77,6 +79,22 @@
     home.file.".tmux.conf".source = ../home/.tmux.conf;
     home.file.".config/tmuxinator".source = ../home/tmuxinator;
     home.file.".config/hypr/hyprland.lua".source = ../home/hypr/grapefroot.lua;
+    home.file.".config/waybar/config.jsonc".source = ../home/waybar/config.jsonc;
+    home.file.".config/waybar/style.css".source = ../home/waybar/style.css;
+
+    systemd.user.services.waybar = {
+      Unit = {
+        Description = "Wayland status bar";
+        PartOf = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
+      };
+      Service = {
+        ExecStart = "${pkgs.waybar}/bin/waybar";
+        Restart = "on-failure";
+        RestartSec = "2";
+      };
+      Install.WantedBy = [ "graphical-session.target" ];
+    };
 
     home.pointerCursor = {
       package = pkgs.adwaita-icon-theme;
