@@ -77,7 +77,7 @@ hl.monitor({
 
 -- Set programs that you use
 local terminal    = "kitty"
-local fileManager = "dolphin"
+local fileManager = "thunar"
 local menu        = "bemenu-run --prompt '' --nb '#001f3f' --nf '#dddddd' --hb '#003d7a' --hf '#ffffff' --sb '#003d7a' --sf '#ffffff' --bdr '#003d7a' -B 1"
 
 
