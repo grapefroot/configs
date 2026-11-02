@@ -69,6 +69,7 @@
       ruff
       package-version-server
       sioyek
+      tailscale
       waybar
     ];
 

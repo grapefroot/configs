@@ -33,7 +33,9 @@
 
       # --- Languages / dev tools ---
       go
+      gopls
       nodejs_24
+      pyright
       uv
       cmake
       bison
@@ -49,6 +51,7 @@
       awscli2
       s3cmd
       docker
+      tailscale
 
       # --- Docs ---
       asciidoc
