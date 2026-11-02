@@ -32,7 +32,19 @@
   };
   
   
-  outputs = { self, nixpkgs, nixpkgs-darwin, home-manager, nix-darwin, microvm, pi, ... }: {
+  outputs = { self, nixpkgs, nixpkgs-darwin, home-manager, nix-darwin, microvm, pi, ... }:
+  let
+    mkMac = host: nix-darwin.lib.darwinSystem {
+      specialArgs = { inherit pi; };
+      modules = [
+        ./hosts/darwin-common.nix
+        host
+        home-manager.darwinModules.home-manager
+        ./modules/pi-coding-agent.nix
+        ./modules/home-darwin.nix
+      ];
+    };
+  in {
 
     nixosConfigurations = {
 
@@ -58,15 +70,9 @@
       };
     };
 
-    darwinConfigurations.macbook = nix-darwin.lib.darwinSystem {
-      system = "x86_64-darwin";
-      specialArgs = { inherit pi; };
-      modules = [
-        ./modules/pi-coding-agent.nix
-        ./hosts/macbook/default.nix
-        home-manager.darwinModules.home-manager
-        ./modules/home-darwin.nix
-      ];
+    darwinConfigurations = {
+      macbook = mkMac ./hosts/macbook/default.nix;
+      macbook-air = mkMac ./hosts/macbook-air/default.nix;
     };
   };
 }
