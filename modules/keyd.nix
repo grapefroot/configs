@@ -33,8 +33,8 @@
       # the three keyboard interfaces still match `17ef:6080` and keep the
       # remap below. Verified against keyd 2.6.0 source (src/config.c).
       ids = [
-        "-17ef:6080:3f467f11"   # exclude trackpoint/mouse interface (event6)
-        "17ef:6080"             # match the three keyboard interfaces
+        "-17ef:6080:3f467f11" # exclude trackpoint/mouse interface (event6)
+        "17ef:6080" # match the three keyboard interfaces
       ];
 
       settings = {

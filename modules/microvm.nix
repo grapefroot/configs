@@ -14,9 +14,9 @@
   # access to the MicroVM state directory — exactly what the `microvm`
   users.groups.kvm = { };
 
-  users.users.focus.extraGroups      = [ "kvm" ];
+  users.users.focus.extraGroups = [ "kvm" ];
   users.users.grapefroot.extraGroups = [ "kvm" ];
-  users.users.admin.extraGroups      = [ "kvm" ];
+  users.users.admin.extraGroups = [ "kvm" ];
 
   # The host module enables itself by default on import
   microvm.host.enable = true;
@@ -39,26 +39,30 @@
   # internet (LLM API, git) with zero host bridge setup. Reach the guest
   # over native AF_VSOCK: `microvm -s pi` (after `systemctl start microvm@pi`).
   microvm.vms.pi = {
-    autostart = false;          # start manually: sudo systemctl start microvm@pi
+    autostart = false; # start manually: sudo systemctl start microvm@pi
     config = { pkgs, ... }: {
       imports = [ ./microvm-qemu.nix ];
       nixpkgs.overlays = [ pi.overlays.default ];
       microvm = {
-        mem = 1024;            # node + agent context; tune down if you want
+        mem = 1024; # node + agent context; tune down if you want
         vcpu = 2;
         vsock.cid = 3;
-        vsock.ssh.enable = true;          # sshd on vsock::22; `microvm -s pi`
-        interfaces = [{
-          type = "user";                  # qemu slirp: outbound net, no host config
-          id = "net0";
-          mac = "02:00:00:00:00:02";
-        }];
-        shares = [{
-          source = "/srv/shared/code";    # host code dir (the ~/code symlink target)
-          mountPoint = "/code";
-          tag = "code";
-          proto = "virtiofs";
-        }];
+        vsock.ssh.enable = true; # sshd on vsock::22; `microvm -s pi`
+        interfaces = [
+          {
+            type = "user"; # qemu slirp: outbound net, no host config
+            id = "net0";
+            mac = "02:00:00:00:00:02";
+          }
+        ];
+        shares = [
+          {
+            source = "/srv/shared/code"; # host code dir (the ~/code symlink target)
+            mountPoint = "/code";
+            tag = "code";
+            proto = "virtiofs";
+          }
+        ];
       };
       networking.useDHCP = false;
       systemd.network.enable = true;
@@ -67,18 +71,14 @@
         networkConfig.DHCP = "yes";
       };
       environment.systemPackages = with pkgs; [
-        pi-coding-agent   # bundles nodejs, ripgrep, fd, bash, python3
+        pi # coding agent CLI
         git
         tmux
         vim
       ];
       # Guest root is PermitRootLogin=prohibit-password, so authorize a key.
-      # Re-run `nix store prefetch-file <url>` if the published key changes.
       users.users.root.openssh.authorizedKeys.keyFiles = [
-        (builtins.fetchurl {
-          url = "https://github.com/grapefroot.keys";
-          sha256 = "3IKn8Lj7elIljGql9MV4BsZe46jFnJT0WrA7elkH/xI=";
-        })
+        ../keys/grapefroot.pub
       ];
       system.stateVersion = "26.05";
     };

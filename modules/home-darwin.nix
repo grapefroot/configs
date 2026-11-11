@@ -1,21 +1,13 @@
-# home-manager configuration for the MacBook (mirrors modules/home.nix shape).
-#
-# Reuses ./programs/zsh.nix so the Mac's shell is identical to the
-# workstation's (oh-my-zsh, lambda theme, syntax highlighting,
-# 10k history). The packages that used to live in the
-# Mac's environment.systemPackages now live in the home-manager user
-# profile instead.
-
-{ pkgs, ... }:
-
+# macOS Home Manager configuration; shares shell/editor settings with Linux.
+{ ... }:
 {
   home-manager.useUserPackages = true;
+  home-manager.useGlobalPkgs = true;
   home-manager.backupFileExtension = "hm-backup";
 
   home-manager.users.grapefroot = { pkgs, ... }: {
     imports = [
-      ./programs/zsh.nix
-      ./programs/zed/zed.nix
+      ./home/common.nix
     ];
 
     home.packages = with pkgs; [
@@ -29,7 +21,6 @@
       gh
       jless
       television
-      pi-coding-agent
 
       # --- Languages / dev tools ---
       go

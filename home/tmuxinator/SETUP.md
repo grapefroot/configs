@@ -1,10 +1,10 @@
 # Setup Reference
 
 Personal dev-environment config on this Mac. Captures the current state of
-tmux sessions, SSH tunnels, and related config so it doesn't have to be
+tmux sessions, SSH config, and related config so it doesn't have to be
 rediscovered. **Read this first** when working on any of these pieces.
 
-Last verified: 2026-07-13
+Last verified: 2026-07-13 (SSH tunnels section updated 2026-11-12)
 
 ---
 
@@ -15,8 +15,6 @@ Last verified: 2026-07-13
 | `~/.config/tmuxinator/work.yml` | `work` tmux session (attached, conda glam) |
 | `~/.config/tmuxinator/ide.yml` | `ide` tmux session (detached, for IDE to attach) |
 | `~/.ssh/config` | Host blocks for `203.0.113.7`, `203.0.113.8`, `github.com` |
-| `~/Library/LaunchAgents/local.ssh-tunnel-8003.plist` | launchd: SSH tunnel → `203.0.113.7:8003` |
-| `~/Library/LaunchAgents/local.ssh-tunnel-8000.plist` | launchd: SSH tunnel → `203.0.113.8:8000` |
 | `~/.zshrc` | `export EDITOR='vim'` (line ~85), oh-my-zsh, mamba init, pi PATH |
 
 Versions: tmux 3.6a (nix-profile), tmuxinator 3.3.7 (nix-profile), macOS 14.x.
@@ -98,66 +96,20 @@ tmux kill-session -t work && tmuxinator start work
 
 ---
 
-## SSH tunnels (launchd)
+## SSH tunnels (removed)
 
-Two persistent SSH local-forwards, managed as user LaunchAgents. Start at
-login, auto-restart on failure (`KeepAlive` + `ThrottleInterval=10`).
-
-| Service label | Local | Remote | Plist |
-|---------------|-------|--------|-------|
-| `local.ssh-tunnel-8003` | `localhost:8003` | `203.0.113.7:8003` | `~/Library/LaunchAgents/local.ssh-tunnel-8003.plist` |
-| `local.ssh-tunnel-8000` | `localhost:8000` | `203.0.113.8:8000` | `~/Library/LaunchAgents/local.ssh-tunnel-8000.plist` |
-
-Both run:
-```
-ssh -N -o ExitOnForwardFailure=yes -o ServerAliveInterval=60 -o ServerAliveCountMax=3 \
-    -L <port>:localhost:<port> <host>
-```
-
-Host options (`StrictHostKeyChecking=no`, `ForwardAgent=yes`, `AddKeysToAgent=yes`,
-`User=ubuntu`) come from `~/.ssh/config`, not the plist.
-
-Why each ssh flag:
-- **`-N`** — no remote shell; pure forwarding (essential for a background service).
-- **`ExitOnForwardFailure=yes`** — if the local port can't bind (already in use), ssh exits instead of hanging; `KeepAlive` then retries cleanly.
-- **`ServerAliveInterval=60` / `ServerAliveCountMax=3`** — detect dead connections through NAT/firewalls so launchd can restart them.
-
-Logs: `~/Library/Logs/ssh-tunnel-<port>.{log,err.log}`.
-
-### Management commands (replace `<svc>` with the label)
+The two launchd tunnels (`local.ssh-tunnel-8003` → `203.0.113.7:8003`,
+`local.ssh-tunnel-8000` → `203.0.113.8:8000`) were retired on 2026-11-12
+because access to the remote machines is gone. If either is still installed
+on the Mac, uninstall it:
 
 ```bash
-# status
-launchctl print gui/$(id -u)/<svc> | grep -E 'state|pid|last exit'
-
-# is the port listening?
-lsof -nP -iTCP:<port> -sTCP:LISTEN
-
-# bounce in place
-launchctl kickstart -k gui/$(id -u)/<svc>
-
-# unload (stops until next login or manual bootstrap)
-launchctl bootout gui/$(id -u)/<svc>
-
-# load / reload after editing the plist
-launchctl bootout   gui/$(id -u)/<svc> 2>/dev/null
-launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/<svc>.plist
-
-# uninstall completely
-launchctl bootout gui/$(id -u)/<svc> && rm ~/Library/LaunchAgents/<svc>.plist
+for svc in local.ssh-tunnel-8003 local.ssh-tunnel-8000; do
+  launchctl bootout gui/$(id -u)/$svc 2>/dev/null
+  rm -f ~/Library/LaunchAgents/$svc.plist
+done
+rm -f ~/Library/Logs/ssh-tunnel-800{0,3}.{log,err.log}
 ```
-
-### No-internet-at-startup behavior
-
-If there's no network at login, ssh fails → launchd retries every ~10s
-(`ThrottleInterval`). The moment internet returns, the next retry succeeds.
-Port stays closed (no listener) until ssh connects — correct, since there's
-nothing to reach. `last exit code` shows `255` during the gap.
-
-Caveat: no `ConnectTimeout` is set, so when the remote is unreachable-but-
-DNS-works, ssh hangs ~75s before failing. Optional improvement: add
-`-o ConnectTimeout=10` to the plist's `ProgramArguments` for a faster retry
-loop (~20s instead of ~85s).
 
 ---
 
@@ -183,8 +135,8 @@ Host github.com
   IdentityFile ~/.ssh/id_ed25519
 ```
 
-- Key `~/.ssh/id_ed25519` has **no passphrase** → ssh reads it from disk at
-  login; tunnels come up at reboot without any keychain/agent dependency.
+- Key `~/.ssh/id_ed25519` has **no passphrase** → ssh reads it from disk
+  without any keychain/agent dependency.
 - `AddKeysToAgent yes` loads the key into the agent on first connect, enabling
   agent forwarding for onward ssh/git from the remotes.
 
@@ -205,11 +157,10 @@ Host github.com
 
 ## Key relationships / why things are where they are
 
-- **Tunnels are in launchd, not tmuxinator** — `on_project_start` runs in the
-  launching shell and *blocks* session creation until it returns; `ssh -L` is a
-  foreground tunnel that never returns, so the session would hang forever.
-  launchd owns the tunnel lifecycle; any process on the Mac (including tmux
-  panes) just talks to `localhost:<port>`.
+- **Never start long-running processes (e.g. `ssh -L` tunnels) from
+  `on_project_start`** — it runs in the launching shell and *blocks* session
+  creation until it returns, so the session would hang forever. Use launchd
+  for anything persistent.
 - **conda activation is in `pre_window`, not `on_project_start`** —
   `on_project_start` runs once outside tmux; `pre_window` runs in *every pane*
   via `send-keys`, so `glam`'s scripts are on `$PATH` everywhere in the session.
@@ -223,7 +174,5 @@ Host github.com
 - `ide` session's pane names are still the original placeholders
   (`main`/`build`/`logs`); no auto-run commands set. Add commands to panes
   (e.g. `- build: cargo watch -x test`) when ready.
-- Optional: add `-o ConnectTimeout=10` to both tunnel plists for faster
-  retry loops when offline.
 - Optional: shell aliases in `~/.zshrc` (`alias mux='tmuxinator'`,
   `alias mw='tmuxinator start work'`, `alias mi='tmuxinator start ide'`).

@@ -3,8 +3,15 @@
 # The flake uses nixpkgs-darwin to match the nix-darwin release.
 {
   nix.enable = true;
-  nix.settings.experimental-features = [ "nix-command" "flakes" "fetch-tree" ];
-  nix.settings.trusted-users = [ "root" "grapefroot" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+    "fetch-tree"
+  ];
+  nix.settings.trusted-users = [
+    "root"
+    "grapefroot"
+  ];
 
   users.users.grapefroot.home = "/Users/grapefroot";
 

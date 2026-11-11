@@ -3,28 +3,42 @@
   users.users."grapefroot" = {
     isNormalUser = true;
     description = "grapefroot";
-    extraGroups = [ "networkmanager" "wheel" "papers" "shared" "docker"];  # write access to /home/papers/papers
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "papers"
+      "shared"
+      "docker"
+    ]; # write access to /home/papers/papers
     shell = pkgs.zsh;
   };
 
   users.users.admin = {
     isNormalUser = true;
-    extraGroups = [ "networkmanager" "wheel" "shared" "docker"];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "shared"
+      "docker"
+    ];
     shell = pkgs.zsh;
   };
 
   users.users.focus = {
     isNormalUser = true;
-    extraGroups = [ "shared" "docker"];
+    extraGroups = [
+      "shared"
+      "docker"
+    ];
     shell = pkgs.zsh;
   };
 
   users.users.papers = {
     isNormalUser = true;
-    extraGroups = [ "papers" ];  # read access to /home/papers/papers
+    extraGroups = [ "papers" ]; # read access to /home/papers/papers
     shell = pkgs.zsh;
   };
 
   # Shared group for the ~/papers directory (admin writes, papers reads)
-  users.groups.papers = {};
+  users.groups.papers = { };
 }

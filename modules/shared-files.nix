@@ -1,20 +1,13 @@
-{ pkgs, ...}:
 {
   users.groups.shared = { };
-  
-  systemd.services.shared-dir = {
-    description = "Shared directory at /srv/shared";
-    wantedBy = [ "multi-user.target" ];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-      ExecStart = pkgs.writeShellScript "setup-shared" ''
-        ${pkgs.coreutils}/bin/mkdir -p /srv/shared
-        ${pkgs.coreutils}/bin/chown root:shared /srv/shared
-        ${pkgs.coreutils}/bin/chmod 2775 /srv/shared
-        ${pkgs.acl}/bin/setfacl -m g:shared:rwx -m d:g:shared:rwx -m d:m:rwx /srv/shared
-        ${pkgs.coreutils}/bin/mkdir -p /srv/shared/code
-      ''; 
-    };
-  };
+
+  # Permanent directories: no age/cleanup and no recursive permission changes.
+  # a+ merges ACL entries, matching the previous setfacl -m behavior.
+  # https://www.freedesktop.org/software/systemd/man/latest/tmpfiles.d.html
+  systemd.tmpfiles.rules = [
+    "d /srv/shared 2775 root shared - -"
+    "d /srv/shared/code 2775 root shared - -"
+    "a+ /srv/shared - - - - g:shared:rwx,m::rwx,d:g:shared:rwx,d:m::rwx"
+    "a+ /srv/shared/code - - - - g:shared:rwx,m::rwx,d:g:shared:rwx,d:m::rwx"
+  ];
 }

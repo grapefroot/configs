@@ -3,14 +3,15 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     # Separate nixpkgs for darwin: nix-darwin's branch must match its nixpkgs
     # branch (nix-darwin-26.05 ←→ nixpkgs-26.05-darwin), which is a different
-    # channel from the Linux nixos-26.05 above. home-manager keeps following
-    # the Linux nixpkgs; nix-darwin follows this one.
+    # channel from the Linux nixos-26.05 above. Home Manager uses each
+    # host's package set through useGlobalPkgs.
     nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-26.05-darwin";
 
-    pi.url = "github:lukasl-dev/pi.nix";
+    pi.url = "github:earendil-works/pi";
 
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
@@ -30,49 +31,73 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  
-  
-  outputs = { self, nixpkgs, nixpkgs-darwin, home-manager, nix-darwin, microvm, pi, ... }:
-  let
-    mkMac = host: nix-darwin.lib.darwinSystem {
-      specialArgs = { inherit pi; };
-      modules = [
-        ./hosts/darwin-common.nix
-        host
-        home-manager.darwinModules.home-manager
-        ./modules/pi-coding-agent.nix
-        ./modules/home-darwin.nix
-      ];
-    };
-  in {
 
-    nixosConfigurations = {
+  outputs =
+    {
+      self,
+      nixpkgs,
+      nixpkgs-unstable,
+      nixpkgs-darwin,
+      home-manager,
+      nix-darwin,
+      microvm,
+      pi,
+      ...
+    }:
+    let
+      mkMac =
+        host:
+        nix-darwin.lib.darwinSystem {
+          specialArgs = { inherit pi; };
+          modules = [
+            ./hosts/darwin-common.nix
+            host
+            home-manager.darwinModules.home-manager
+            ./modules/pi-coding-agent.nix
+            ./modules/home-darwin.nix
+          ];
+        };
+    in
+    {
+      formatter =
+        nixpkgs.lib.genAttrs
+          [
+            "x86_64-linux"
+            "x86_64-darwin"
+            "aarch64-darwin"
+          ]
+          (
+            system:
+            (if nixpkgs.lib.hasSuffix "-darwin" system then nixpkgs-darwin else nixpkgs)
+            .legacyPackages.${system}.nixfmt
+          );
 
-      workstation = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = { inherit pi; };
-        modules = [
-          ./modules/pi-coding-agent.nix
-          ./modules/treesheets.nix
-          ./hosts/workstation/default.nix
-          ./hosts/workstation/hardware-configuration.nix
-          ./modules/users.nix
-          ./modules/shared-files.nix
-          ./modules/nix-restrict.nix
-          ./modules/nix-ld.nix
-          ./modules/keyd.nix
-          ./modules/libinput-quirks.nix
-          microvm.nixosModules.host
-          ./modules/microvm.nix
-          home-manager.nixosModules.home-manager
-          ./modules/home.nix
-        ];
+      nixosConfigurations = {
+
+        workstation = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = { inherit pi nixpkgs-unstable; };
+          modules = [
+            ./modules/pi-coding-agent.nix
+            ./modules/treesheets.nix
+            ./hosts/workstation/default.nix
+            ./modules/users.nix
+            ./modules/shared-files.nix
+            ./modules/nix-restrict.nix
+            ./modules/nix-ld.nix
+            ./modules/keyd.nix
+            ./modules/libinput-quirks.nix
+            microvm.nixosModules.host
+            ./modules/microvm.nix
+            home-manager.nixosModules.home-manager
+            ./modules/home.nix
+          ];
+        };
+      };
+
+      darwinConfigurations = {
+        macbook = mkMac ./hosts/macbook/default.nix;
+        macbook-air = mkMac ./hosts/macbook-air/default.nix;
       };
     };
-
-    darwinConfigurations = {
-      macbook = mkMac ./hosts/macbook/default.nix;
-      macbook-air = mkMac ./hosts/macbook-air/default.nix;
-    };
-  };
 }
