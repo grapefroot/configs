@@ -37,6 +37,7 @@
       gallery-dl
       yt-dlp
       hugo
+      sioyek
 
       # --- Cloud / containers ---
       awscli2
